@@ -6,7 +6,14 @@ import sqlite3
 import os
 from datetime import datetime
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'exam_attendance.db')
+if os.environ.get('VERCEL'):
+    import shutil
+    BASE_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'exam_attendance.db')
+    DB_PATH = '/tmp/exam_attendance.db'
+    if not os.path.exists(DB_PATH) and os.path.exists(BASE_DB):
+        shutil.copy2(BASE_DB, DB_PATH)
+else:
+    DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'exam_attendance.db')
 
 def get_db():
     conn = sqlite3.connect(DB_PATH, timeout=20.0)

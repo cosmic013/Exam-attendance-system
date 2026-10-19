@@ -35,4 +35,6 @@ if __name__ == '__main__':
     # Launch browser thread
     threading.Thread(target=open_browser, daemon=True).start()
 
-    app.run(host=os.environ.get('HOST', '127.0.0.1'), port=5000, debug=False, threaded=True)
+    port = int(os.environ.get('PORT', 5000))
+    host = os.environ.get('HOST', '0.0.0.0' if os.environ.get('RENDER') else '127.0.0.1')
+    app.run(host=host, port=port, debug=False, threaded=True)

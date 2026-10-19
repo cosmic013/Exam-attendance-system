@@ -18,7 +18,12 @@ from database import get_db, init_db, seed_demo_data, log_audit
 from excel_generator import generate_coe_attendance_excel
 import events
 
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 
 # COE override PIN comes from the environment. If unset, a random one is generated
@@ -819,8 +824,10 @@ def evaluator_cross_verify():
     })
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    host = os.environ.get('HOST', '0.0.0.0')
     print("=" * 65)
     print(" Digital Examination Attendance & Verification System ")
-    print(" Running on: http://127.0.0.1:5000")
+    print(f" Running on: http://{host}:{port}")
     print("=" * 65)
-    app.run(host=os.environ.get('HOST', '127.0.0.1'), port=5000, debug=os.environ.get('FLASK_DEBUG') == '1', threaded=True)
+    app.run(host=host, port=port, debug=os.environ.get('FLASK_DEBUG') == '1', threaded=True)

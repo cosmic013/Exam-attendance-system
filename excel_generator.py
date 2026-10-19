@@ -218,7 +218,10 @@ def generate_coe_attendance_excel(session_data, students_list, output_path=None)
         ws.column_dimensions[col].width = width
 
     if output_path is None:
-        reports_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'generated_reports')
+        if os.environ.get('VERCEL'):
+            reports_dir = '/tmp/generated_reports'
+        else:
+            reports_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'generated_reports')
         os.makedirs(reports_dir, exist_ok=True)
         filename = f"Attendance_COE_{session_data['course_code']}_{session_data['room_number'].replace(' ', '_')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         output_path = os.path.join(reports_dir, filename)
